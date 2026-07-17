@@ -1,5 +1,5 @@
 import {IsEmail, IsEnum, IsString, MaxLength} from 'class-validator'
-import { Roles } from '../entities/user.entity';
+import { Roles } from '@repo/enums/user_roles.enum';
 
 export class RegisterDto{
   @IsString()

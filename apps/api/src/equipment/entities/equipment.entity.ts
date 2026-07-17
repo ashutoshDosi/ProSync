@@ -1,13 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Businesses } from "../../business/entities/business.entity";
 import { EquipmentCategory } from "./equipment_category.entity";
-
-export enum Status {
-  AVAILABLE = 'available',
-  RENTED = 'rented',
-  MAINTENANCE = 'under-maintenance',
-}
-
+import { Status } from "@repo/enums/equipment_status.enum";
 
 @Entity()
 export class Equipment {

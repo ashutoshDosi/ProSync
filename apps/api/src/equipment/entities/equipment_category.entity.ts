@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Collection } from "typeorm/driver/mongodb/typings.js";
 import { Businesses } from "../../business/entities/business.entity";
 
 @Entity()

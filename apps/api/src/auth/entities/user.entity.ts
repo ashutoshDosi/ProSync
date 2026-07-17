@@ -1,11 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-
-export enum Roles {
-  OWNER= 'owner',
-  ISSUER= 'issuer',
-  CUSTOMER= 'customer',
-  MAINTENANCE_CREW = 'maintenance-crew'
-}
+import { Roles } from "@repo/enums/user_roles.enum";
 
 @Entity('users')
 export class User{
