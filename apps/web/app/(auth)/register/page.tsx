@@ -1,16 +1,38 @@
 'use client'
-import Button from "../../components/ui/Button"
+
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { api } from "../../utils/api"
 import { ROLES } from "../roles"
+import Button from "../../components/ui/Button"
 
 export default function Register() {
+  const router = useRouter()
   const [role, setRole] = useState("owner")
+  const [userName, setUserName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [agreed, setAgreed] = useState(false)
+  const [error, setError] = useState("")
 
-  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (password !== confirmPassword) {
+      setError("Passwords don't match")
+      return
+    }
+    try {
+      await api.post('/auth/register', { name: userName, email, password, phone, role })
+      router.push('/login')
+    } catch (err) {
+      setError('Could not create account')
+    }
+  }
 
   return(
-    <div className="mt-6 bg-white/3 border border-white/10 rounded-xl p-6">
+    <form onSubmit={handleSubmit} className="mt-6 bg-white/3 border border-white/10 rounded-xl p-6">
       <h1 className="text-white text-2xl font-semibold">Create your account</h1>
       <p className="text-gray-400 text-sm mt-1">Manage inventory, analytics and reservations across your fleet.</p>
 
@@ -36,6 +58,11 @@ export default function Register() {
             type="text"
             placeholder="Jordan Miller"
             className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9184D9]/60"
+            value={userName}
+            onChange={(e)=> {
+              e.preventDefault;
+              setUserName(e.target.value);
+            }}
           />
         </div>
         <div>
@@ -49,14 +76,29 @@ export default function Register() {
         </div>
       </div>
 
-      <div className="mt-4">
-        <label htmlFor="email" className="text-gray-400 text-sm">Email</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="you@company.com"
-          className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9184D9]/60"
-        />
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <div>
+          <label htmlFor="email" className="text-gray-400 text-sm">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="you@company.com"
+            className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9184D9]/60"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="phone" className="text-gray-400 text-sm">Phone</label>
+          <input
+            id="phone"
+            type="tel"
+            placeholder="5551234567"
+            className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9184D9]/60"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
@@ -66,6 +108,8 @@ export default function Register() {
             id="password"
             type="password"
             className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9184D9]/60"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div>
@@ -74,6 +118,8 @@ export default function Register() {
             id="confirmPassword"
             type="password"
             className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9184D9]/60"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
       </div>
@@ -88,6 +134,8 @@ export default function Register() {
         I agree to the Terms of Service and Privacy Policy
       </label>
 
+      {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
+
       <button
         type="submit"
         disabled={!agreed}
@@ -100,6 +148,6 @@ export default function Register() {
       <p className="text-center text-gray-400 text-sm mt-4">
         Already have an account? <a href="/login" className="text-[#9184D9] hover:underline">Sign in</a>
       </p>
-    </div>
+    </form>
   )
 }

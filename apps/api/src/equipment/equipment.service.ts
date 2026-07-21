@@ -19,7 +19,7 @@ export class EquipmentService{
     }
   }
 
-  async update(id: string, dto: Partial<EquipmentDto>){
+  async update(id: number, dto: Partial<EquipmentDto>){
     try{
       await this.equipments.update(id, dto);
       return this.equipments.findOneBy({equipment_id: id})
@@ -28,7 +28,7 @@ export class EquipmentService{
     }
   }
 
-  async delete(id: string){
+  async delete(id: number){
     try{
       return await this.equipments.delete(id);
     } catch (err){

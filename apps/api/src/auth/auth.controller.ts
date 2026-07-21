@@ -57,6 +57,5 @@ export class AuthController{
     });
     return { accessToken };
   }
-
 }
 

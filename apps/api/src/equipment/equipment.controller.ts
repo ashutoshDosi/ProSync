@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Patch, Delete } from "@nestjs/common";
+import { Body, Controller, Param, ParseIntPipe, Post, Patch, Delete } from "@nestjs/common";
 import { EquipmentService } from "./equipment.service";
 import { EquipmentDto } from "./dto/equipment.dto";
 
@@ -12,12 +12,12 @@ export class EquipmentController{
   }
 
   @Patch(':id')
-  async update(@Param('id') id:string, @Body() body:EquipmentDto){
+  async update(@Param('id', ParseIntPipe) id: number, @Body() body:EquipmentDto){
     return this.equipmentService.update(id, body);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id:string){
+  async delete(@Param('id', ParseIntPipe) id: number){
     return this.equipmentService.delete(id);
   }
-} 
+}
