@@ -2,18 +2,34 @@
 import Button from "../../components/ui/Button"
 import { useState } from "react"
 import { ROLES } from "../roles"
+import { api } from "../../utils/api"
+import { useRouter } from "next/navigation"
 
 export default function Login() {
+  const router = useRouter();
   const [role, setRole] = useState("owner")
+  const [email, setEmail] = useState("");
+  const [password, setPasword] = useState("")
+  const [error, setError] = useState("")
 
-  const handleClick = (selectedRole : string) => {
+  const handleClick = async (selectedRole: string) => {
     setRole(selectedRole)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      await api.post('/auth/login', { email, password })
+      router.push('/dashboard')
+    } catch (err) {
+      setError('Invalid email or password')
+    }
   }
 
   const roleLabel = ROLES.find((r) => r.value === role)?.label ?? ""
 
   return(
-    <div className="mt-6 bg-white/3 border border-white/10 rounded-xl p-6">
+    <form onSubmit={handleSubmit} className="mt-6 bg-white/3 border border-white/10 rounded-xl p-6">
       <h1 className="text-white text-2xl font-semibold">Sign in</h1>
       <p className="text-gray-400 text-sm mt-1">Manage inventory, analytics and reservations across your fleet.</p>
 
@@ -38,6 +54,9 @@ export default function Login() {
           type="email"
           placeholder="you@company.com"
           className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#9184D9]/60"
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
         />
       </div>
 
@@ -47,6 +66,10 @@ export default function Login() {
           id="password"
           type="password"
           className="mt-1 w-full bg-transparent border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-[#9184D9]/60"
+          onChange={(e) => {
+            e.preventDefault;
+            setPasword(e.target.value);
+          }}
         />
       </div>
 
@@ -57,6 +80,8 @@ export default function Login() {
         </label>
         <a href="#" className="text-sm text-[#9184D9] hover:underline">Forgot password?</a>
       </div>
+
+      {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
 
       <button
         type="submit"
@@ -69,6 +94,6 @@ export default function Login() {
       <p className="text-center text-gray-400 text-sm mt-4">
         Don&apos;t have an account? <a href="/register" className="text-[#9184D9] hover:underline">Create one</a>
       </p>
-    </div>
+    </form>
   )
 }
